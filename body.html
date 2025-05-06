@@ -1,0 +1,586 @@
+<!-- Copyright (c) 2020 8th Wall, Inc. -->
+<!-- body.html is optional; elements will be added to your html body after app.js is loaded. -->
+
+<div id="recenterButtonContainer" class="hidden">
+    <img src="./assets/images/recenter.png" />
+  </div>
+  
+  <div>Hide Model</div>
+  
+  <div id="container" class="collapsed">
+    <div id="closeButton" onclick="hideAll()">x</div>
+  
+    <div
+      v-for="(h, index) in hotspots"
+      :key="h.id"
+      :id="h.id + '-div'"
+      class="content-section hidden">
+      <div class="image-container">
+        <img :src="h.image" alt="Artifact Image" class="centered-image" />
+      </div>
+      <h1 class="title">{{h.title}}</h1>
+      <div class="overview">
+        <p v-for="(line,i) in h.overview" :key="i">{{line}}</p>
+      </div>
+      <div class="more-info">
+        <p v-for="(p,i) in h.moreInfo" :key="i">{{p}}</p>
+      </div>
+    </div>
+  
+    <div id="arButton" onclick="showAR()">AR</div>
+  </div>
+  
+  <a-scene
+    recenter-button
+    xrextras-gesture-detector
+    landing-page
+    xrextras-loading
+    xrextras-runtime-error
+    renderer="colorManagement: true; webgl2: true"
+    xrweb="allowedDevices: any; disableWorldTracking: true">
+    <!-- We can define assets here to be loaded when A-Frame initializes -->
+    <a-assets>
+      <!-- Credit to Poly by Google for the model: https://poly.google.com/view/7rUkCX-AIR2 -->
+      <a-asset-item id="hotspotE-src" src="assets/models/E_rotated.glb"></a-asset-item>
+      <a-asset-item id="hotspotT-src" src="assets/models/T_rotated.glb"></a-asset-item>
+      <a-asset-item id="hotspotK-src" src="assets/models/K_rotated.glb"></a-asset-item>
+      <a-asset-item id="hotspotG-src" src="assets/models/G_rotated.glb"></a-asset-item>
+      <a-asset-item id="hotspotH-src" src="assets/models/H_rotated.glb"></a-asset-item>
+      <a-asset-item id="hotspotJ-src" src="assets/models/J_rotated.glb"></a-asset-item>
+      <a-asset-item id="hotspotU-src" src="assets/models/U_rotated.glb"></a-asset-item>
+      <a-asset-item id="hotspotW-src" src="assets/models/W_rotated.glb"></a-asset-item>
+      <a-asset-item id="hotspotO-src" src="assets/models/O_rotated.glb"></a-asset-item>
+      <a-asset-item id="hotspotI-src" src="assets/models/I_rotated.glb"></a-asset-item>
+      <a-asset-item id="hotspotS-src" src="assets/models/S_rotated.glb"></a-asset-item>
+      <a-asset-item id="hotspotF-src" src="assets/models/F_rotated.glb"></a-asset-item>
+  
+      <a-mixin
+        id="hotspot-text"
+        text="font: exo2bold; width: 5"
+        geometry="primitive: plane; width: 1.6; height: 0.4"
+        material="color: black;"
+        position="0 0.5 0"></a-mixin>
+      <a-mixin
+        id="hotspot-target"
+        geometry="primitive: octahedron; radius: 0.2;"
+        material="flatShading: true; color: rgb(255, 0, 161)"></a-mixin>
+    </a-assets>
+  
+    <!-- The raycaster will emit mouse events on scene objects specified with the cantap class -->
+    <a-camera
+      id="camera"
+      position="0 1.6 0"
+      raycaster="objects: .cantap"
+      cursor="fuse: false; rayOrigin: mouse;">
+    </a-camera>
+  
+    <!-- <a-entity
+      light="
+        type: directional;
+        intensity: 2.8;
+        castShadow: true;
+        shadowMapHeight: 2048;
+        shadowMapWidth: 2048;
+        shadowCameraTop: 10;
+        target: #hotspotE-model;"
+      xrextras-attach="target: model; offset: 1 15 3;"
+      shadow>
+    </a-entity> -->
+  
+    <!-- <a-light type="ambient" intensity="3.0" color=></a-light> -->
+    <a-entity light="type: ambient; color: #EEE"></a-entity>
+  
+    <a-plane id="ground" rotation="0 0 0" width="1000" height="1000" material="shader: shadow" shadow>
+    </a-plane>
+  
+    <a-entity
+      light="type: directional; color: #EEE; intensity: 0.5;"
+      position="0 1.6 -1"
+      target="#hotspotE=model"></a-entity>
+    <a-entity
+      light="type: directional; color: #EEE; intensity: 2;"
+      position="0 1.6 -1"
+      target="#hotspotT=model"></a-entity>
+  
+    <!-- coordinate 2 -->
+    <!-- 圆凳 -->
+    <a-entity
+      id="hotspotE-model"
+      gltf-model="#hotspotE-src"
+      scale="0.2 0.2 0.2"
+      rotation="-150 0 0"
+      visible="false"
+      class="cantap model"
+      gesture-rotate-z
+      gesture-rotate-x
+      xrextras-hold-drag
+      xrextras-pinch-scale>
+    </a-entity>
+    <!-- 耳壶 -->
+    <a-entity
+      id="hotspotW-model"
+      gltf-model="#hotspotW-src"
+      scale="0.2 0.2 0.2"
+      rotation="0 0 0"
+      visible="false"
+      class="cantap model"
+      gesture-rotate-z
+      gesture-rotate-x
+      xrextras-hold-drag
+      xrextras-pinch-scale>
+    </a-entity>
+    <!-- 香炉 -->
+    <a-entity
+      id="hotspotF-model"
+      gltf-model="#hotspotF-src"
+      scale="0.2 0.2 0.2"
+      rotation="0 0 0"
+      visible="false"
+      class="cantap model"
+      gesture-rotate-z
+      gesture-rotate-x
+      xrextras-hold-drag
+      xrextras-pinch-scale>
+    </a-entity>
+    <!-- 方椅 -->
+    <a-entity
+      id="hotspotO-model"
+      gltf-model="#hotspotO-src"
+      scale="0.2 0.2 0.2"
+      rotation="0 0 0"
+      visible="false"
+      class="cantap model"
+      gesture-rotate-z
+      gesture-rotate-x
+      xrextras-hold-drag
+      xrextras-pinch-scale>
+    </a-entity>
+  
+    <!-- coordinate 3 -->
+    <!-- 屏风 -->
+    <a-entity
+      id="hotspotK-model"
+      gltf-model="#hotspotK-src"
+      scale="0.2 0.2 0.2"
+      rotation="0 0 0"
+      visible="false"
+      class="cantap model"
+      gesture-rotate-z
+      gesture-rotate-x
+      xrextras-hold-drag
+      xrextras-pinch-scale>
+    </a-entity>
+    <!-- 笔架 -->
+    <a-entity
+      id="hotspotG-model"
+      gltf-model="#hotspotG-src"
+      scale="0.2 0.2 0.2"
+      rotation="0 0 0"
+      visible="false"
+      class="cantap model"
+      gesture-rotate-z
+      gesture-rotate-x
+      xrextras-hold-drag
+      xrextras-pinch-scale>
+    </a-entity>
+    <!-- 水注 -->
+    <a-entity
+      id="hotspotI-model"
+      gltf-model="#hotspotI-src"
+      scale="0.2 0.2 0.2"
+      rotation="0 0 0"
+      visible="false"
+      class="cantap model"
+      gesture-rotate-z
+      gesture-rotate-x
+      xrextras-hold-drag
+      xrextras-pinch-scale>
+    </a-entity>
+    <!-- 砚台 -->
+    <a-entity
+      id="hotspotJ-model"
+      gltf-model="#hotspotJ-src"
+      scale="0.2 0.2 0.2"
+      rotation="0 0 0"
+      visible="false"
+      class="cantap model"
+      gesture-rotate-z
+      gesture-rotate-x
+      xrextras-hold-drag
+      xrextras-pinch-scale>
+    </a-entity>
+    <!-- 镇纸 -->
+    <a-entity
+      id="hotspotH-model"
+      gltf-model="#hotspotH-src"
+      scale="0.2 0.2 0.2"
+      rotation="0 0 0"
+      visible="false"
+      class="cantap model"
+      gesture-rotate-z
+      gesture-rotate-x
+      xrextras-hold-drag
+      xrextras-pinch-scale>
+    </a-entity>
+  
+    <!-- coordinate 4 -->
+    <!-- 桌子 -->
+    <a-entity
+      id="hotspotS-model"
+      gltf-model="#hotspotS-src"
+      scale="0.2 0.2 0.2"
+      rotation="0 0 0"
+      visible="false"
+      class="cantap model"
+      gesture-rotate-z
+      gesture-rotate-x
+      xrextras-hold-drag
+      xrextras-pinch-scale>
+    </a-entity>
+  
+    <!-- coordinate 5 -->
+    <!-- 水桶fresh water jar -->
+    <a-entity
+      id="hotspotU-model"
+      gltf-model="#hotspotU-src"
+      scale="0.2 0.2 0.2"
+      rotation="0 0 0"
+      visible="false"
+      class="cantap model"
+      gesture-rotate-z
+      gesture-rotate-x
+      xrextras-hold-drag
+      xrextras-pinch-scale>
+    </a-entity>
+    <!-- 鸡杯 -->
+    <a-entity
+      id="hotspotT-model"
+      gltf-model="#hotspotT-src"
+      scale="0.2 0.2 0.2"
+      rotation="0 0 0"
+      visible="false"
+      class="cantap model"
+      gesture-rotate-z
+      gesture-rotate-x
+      xrextras-hold-drag
+      xrextras-pinch-scale>
+    </a-entity>
+  
+    <!-- image target, name=name in upload -->
+    <!-- image target, name=name in upload -->
+    <xrextras-named-image-target name="coordinate_1">
+      <!-- hotspot entity, position relative to image target -->
+      <!-- x:LR, y:TB, z:FB from center-->
+  
+      <!-- scale="0.10 0.10 0.10" approx. 50x50x50px -->
+  
+      <a-entity
+        id="hotspotA"
+        mixin="hotspot-target"
+        position="0.0203 0.0406 0"
+        rotation="0 0 0"
+        scale="0.10 0.10 0.10"
+        look-at="#camera"
+        class="cantap"
+        tap-hotspot>
+        <a-text
+          id="hotspotA-child"
+          value="Hotspot A"
+          align="center"
+          mixin="hotspot-text"
+          visible="false"
+          tap-close></a-text>
+      </a-entity>
+    </xrextras-named-image-target>
+    <xrextras-named-image-target name="coordinate_2">
+      <a-entity
+        id="hotspotE"
+        mixin="hotspot-target"
+        position="-0.0063 -0.1016 0"
+        rotation="0 0 0"
+        scale="0.10 0.10 0.10"
+        look-at="#camera"
+        class="cantap"
+        tap-hotspot>
+        <a-text
+          id="hotspotE-child"
+          value="Hotspot E"
+          align="center"
+          mixin="hotspot-text"
+          visible="false"
+          tap-close></a-text>
+      </a-entity>
+  
+      <a-entity
+        id="hotspotW"
+        mixin="hotspot-target"
+        position="0.2031 0.0500 0"
+        rotation="0 0 0"
+        scale="0.10 0.10 0.10"
+        look-at="#camera"
+        class="cantap"
+        tap-hotspot>
+        <a-text
+          id="hotspotW-child"
+          value="Hotspot W"
+          align="center"
+          mixin="hotspot-text"
+          visible="false"
+          tap-close></a-text>
+      </a-entity>
+  
+      <a-entity
+        id="hotspotF"
+        mixin="hotspot-target"
+        position="0.3250 0.2469 0"
+        rotation="0 0 0"
+        scale="0.10 0.10 0.10"
+        look-at="#camera"
+        class="cantap"
+        tap-hotspot>
+        <a-text
+          id="hotspotF-child"
+          value="Hotspot F"
+          align="center"
+          mixin="hotspot-text"
+          visible="false"
+          tap-close></a-text>
+      </a-entity>
+  
+      <a-entity
+        id="hotspotO"
+        mixin="hotspot-target"
+        position="-0.2281 0.0820 0"
+        rotation="0 0 0"
+        scale="0.10 0.10 0.10"
+        look-at="#camera"
+        class="cantap"
+        tap-hotspot>
+        <a-text
+          id="hotspotO-child"
+          value="Hotspot O"
+          align="center"
+          mixin="hotspot-text"
+          visible="false"
+          tap-close></a-text>
+      </a-entity>
+    </xrextras-named-image-target>
+    <xrextras-named-image-target name="coordinate_3">
+      <a-entity
+        id="hotspotG"
+        mixin="hotspot-target"
+        position="-0.3609 0.0875 0"
+        rotation="0 0 0"
+        scale="0.10 0.10 0.10"
+        look-at="#camera"
+        class="cantap"
+        tap-hotspot>
+        <a-text
+          id="hotspotG-child"
+          value="Hotspot G"
+          align="center"
+          mixin="hotspot-text"
+          visible="false"
+          tap-close></a-text>
+      </a-entity>
+  
+      <a-entity
+        id="hotspotH"
+        mixin="hotspot-target"
+        position="-0.3281 0.0328 0"
+        rotation="0 0 0"
+        scale="0.10 0.10 0.10"
+        look-at="#camera"
+        class="cantap"
+        tap-hotspot>
+        <a-text
+          id="hotspotH-child"
+          value="Hotspot H"
+          align="center"
+          mixin="hotspot-text"
+          visible="false"
+          tap-close></a-text>
+      </a-entity>
+  
+      <a-entity
+        id="hotspotI"
+        mixin="hotspot-target"
+        position="-0.2797 0.0750 0"
+        rotation="0 0 0"
+        scale="0.10 0.10 0.10"
+        look-at="#camera"
+        class="cantap"
+        tap-hotspot>
+        <a-text
+          id="hotspotI-child"
+          value="Hotspot I"
+          align="center"
+          mixin="hotspot-text"
+          visible="false"
+          tap-close></a-text>
+      </a-entity>
+  
+      <a-entity
+        id="hotspotJ"
+        mixin="hotspot-target"
+        position="-0.3078 0.1141 0"
+        rotation="0 0 0"
+        scale="0.10 0.10 0.10"
+        look-at="#camera"
+        class="cantap"
+        tap-hotspot>
+        <a-text
+          id="hotspotJ-child"
+          value="Hotspot J"
+          align="center"
+          mixin="hotspot-text"
+          visible="false"
+          tap-close></a-text>
+      </a-entity>
+  
+      <a-entity
+        id="hotspotK"
+        mixin="hotspot-target"
+        position="-0.2859 0.1750 0"
+        rotation="0 0 0"
+        scale="0.10 0.10 0.10"
+        look-at="#camera"
+        class="cantap"
+        tap-hotspot>
+        <a-text
+          id="hotspotK-child"
+          value="Hotspot K"
+          align="center"
+          mixin="hotspot-text"
+          visible="false"
+          tap-close></a-text>
+      </a-entity>
+  
+      <a-entity
+        id="hotspotL"
+        mixin="hotspot-target"
+        position="-0.1375 0.0531 0"
+        rotation="0 0 0"
+        scale="0.10 0.10 0.10"
+        look-at="#camera"
+        class="cantap"
+        tap-hotspot>
+        <a-text
+          id="hotspotL-child"
+          value="Hotspot L"
+          align="center"
+          mixin="hotspot-text"
+          visible="false"
+          tap-close></a-text>
+      </a-entity>
+  
+      <a-entity
+        id="hotspotM"
+        mixin="hotspot-target"
+        position="0.0641 0.0578 0"
+        rotation="0 0 0"
+        scale="0.10 0.10 0.10"
+        look-at="#camera"
+        class="cantap"
+        tap-hotspot>
+        <a-text
+          id="hotspotM-child"
+          value="Hotspot M"
+          align="center"
+          mixin="hotspot-text"
+          visible="false"
+          tap-close></a-text>
+      </a-entity>
+    </xrextras-named-image-target>
+    <xrextras-named-image-target name="coordinate_4">
+      <a-entity
+        id="hotspotQ"
+        mixin="hotspot-target"
+        position="0.0906 0.0422 0"
+        rotation="0 0 0"
+        scale="0.10 0.10 0.10"
+        look-at="#camera"
+        class="cantap"
+        tap-hotspot>
+        <a-text
+          id="hotspotQ-child"
+          value="Hotspot Q"
+          align="center"
+          mixin="hotspot-text"
+          visible="false"
+          tap-close></a-text>
+      </a-entity>
+      <a-entity
+        id="hotspotR"
+        mixin="hotspot-target"
+        position="0.3156 0.0891 0"
+        rotation="0 0 0"
+        scale="0.10 0.10 0.10"
+        look-at="#camera"
+        class="cantap"
+        tap-hotspot>
+        <a-text
+          id="hotspotR-child"
+          value="Hotspot R"
+          align="center"
+          mixin="hotspot-text"
+          visible="false"
+          tap-close></a-text>
+      </a-entity>
+      <a-entity
+        id="hotspotS"
+        mixin="hotspot-target"
+        position="0.4297 -0.0203 0"
+        rotation="0 0 0"
+        scale="0.10 0.10 0.10"
+        look-at="#camera"
+        class="cantap"
+        tap-hotspot>
+        <a-text
+          id="hotspotS-child"
+          value="Hotspot S"
+          align="center"
+          mixin="hotspot-text"
+          visible="false"
+          tap-close></a-text>
+      </a-entity>
+    </xrextras-named-image-target>
+    <xrextras-named-image-target name="coordinate_5">
+      <a-entity
+        id="hotspotU"
+        mixin="hotspot-target"
+        position="-0.1688 0.1828 0"
+        rotation="0 0 0"
+        scale="0.10 0.10 0.10"
+        look-at="#camera"
+        class="cantap"
+        tap-hotspot>
+        <a-text
+          id="hotspotU-child"
+          value="Hotspot U"
+          align="center"
+          mixin="hotspot-text"
+          visible="false"
+          tap-close></a-text>
+      </a-entity>
+  
+      <a-entity
+        id="hotspotT"
+        mixin="hotspot-target"
+        position="-0.1000 -0.0578 0"
+        rotation="0 0 0"
+        scale="0.10 0.10 0.10"
+        look-at="#camera"
+        class="cantap"
+        tap-hotspot>
+        <a-text
+          id="hotspotT-child"
+          value="Hotspot T"
+          align="center"
+          mixin="hotspot-text"
+          visible="false"
+          tap-close></a-text>
+      </a-entity>
+    </xrextras-named-image-target>
+  </a-scene>
+  
