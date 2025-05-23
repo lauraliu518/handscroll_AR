@@ -20,10 +20,4 @@ This project is an interactive augmented reality (AR) application designed to en
 
 - Point your device's camera at the hand scroll to trigger the AR experience.
 - Interact with hotspots to learn more about each artifact.
-- Use touch gestures to rotate and explore 3D models.
-
-
-
-# Attribution
-
-Credit to Alex “SAFFY” Safayan & Poly by Google for the model: https://poly.google.com/view/7rUkCX-AIR2
+- Use touch gestures to rotate and explore 3D models
