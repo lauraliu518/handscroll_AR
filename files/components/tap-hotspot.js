@@ -4,12 +4,12 @@ const tapHotspotComponent = {
       const contents = document.getElementById('contents')
       const container = document.getElementById('container')
       const childElement = document.getElementById(`${id}-child`)
-      const currentWorkingDiv = document.getElementById(`${id}-div`)  // Get corresponding div
+      const currentWorkingDiv = document.getElementById(`${id}-div`)  
   
       const handleClickEvent = (e) => {
         console.log(container.children.length)
         console.log(`hello${id}-div`)
-        hideAll()  // Assuming this function hides all hotspots or resets states
+        hideAll()  //hide all previous elements
         container.classList.remove('collapsed')
         childElement.setAttribute('visible', true)
         childElement.setAttribute('class', 'cantap')
